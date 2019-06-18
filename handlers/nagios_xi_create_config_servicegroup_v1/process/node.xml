@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taskDefinition id="nagios_xi_create_config_servicegroup" name="Nagios XI Create Servicegroup" schema_version="1.0" version="1">
+    <author>support@kineticdata.com</author>
+    <description>
+        This handler creates a new Nagios XI hostgroup object.
+    </description>
+    <helpurl></helpurl>
+    <visible>true</visible>
+    <deferrable>false</deferrable>
+    <parameters>
+
+        <parameter id="error_handling" label="error handling" required="true"
+          tooltip="Determine what to return if an error is encountered." menu="Error Message,Raise Error">Error Message</parameter>
+        <parameter id="return_response" label="return response" required="true"
+          tooltip="true or false. Determines if Kinetic Task returns the Nagios response output.">yes</parameter>
+        <parameter id="servicegroup_name" label="servicegroup name" required="true"
+          tooltip="New servicegroup name to create." ></parameter>
+        <parameter id="alias" label="alias" required="true"
+          tooltip="Alias to apply to servicegroup." ></parameter>
+        <parameter id="applyconfig" label="apply config" required="true"
+          tooltip="1 or 0 for true or false. 1 will restart the Nagios Core service and apply the change." >0</parameter>
+
+    </parameters>
+    <handler name="nagios_xi_create_config_servicegroup" version="1">
+        <infos>
+            <info name="api_server">&lt;%= @info['api_server'] %&gt;</info>
+            <info name="api_key">&lt;%= @info['api_key'] %&gt;</info>
+        </infos>
+        <parameters>
+            <parameter name="return_response">&lt;%= @parameters['return_response'] %&gt;</parameter>
+            <parameter name="error_handling">&lt;%= @parameters["error_handling"] %&gt;</parameter>
+        </parameters>
+        <api>
+            <route>/nagiosxi/api/v1/config/servicegroup</route>
+            <urlParameters>
+                <parameter name="apikey">&lt;%= @info['api_key'] %&gt;</parameter>
+                <parameter name="servicegroup_name">&lt;%= @parameters['servicegroup_name'] %&gt;</parameter>
+                <parameter name="alias">&lt;%= @parameters['alias'] %&gt;</parameter>
+                <parameter name="applyconfig">&lt;%= @parameters['applyconfig'] %&gt;</parameter>
+            </urlParameters>
+        </api>
+    </handler>
+    <results format="xml">
+        <result name="Handler Error Message"/>
+        <result name="Nagios XI Response"/>
+    </results>
+</taskDefinition>

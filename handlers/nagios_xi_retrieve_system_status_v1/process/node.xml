@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taskDefinition id="nagios_xi_retrieve_system_status" name="Nagios XI Retrieve System Status" schema_version="1.0" version="1">
+    <author>support@kineticdata.com</author>
+    <description>
+        This handler retrieves the Nagios Core system status.
+    </description>
+    <helpurl></helpurl>
+    <visible>true</visible>
+    <deferrable>false</deferrable>
+    <parameters>
+
+      <parameter id="error_handling" label="error handling" required="true"
+        tooltip="Determine what to return if an error is encountered." menu="Error Message,Raise Error">Error Message</parameter>
+
+    </parameters>
+    <handler name="nagios_xi_retrieve_system_status" version="1">
+        <infos>
+            <info name="api_server">&lt;%= @info['api_server'] %&gt;</info>
+            <info name="api_key">&lt;%= @info['api_key'] %&gt;</info>
+        </infos>
+        <parameters>
+            <parameter name="error_handling">&lt;%= @parameters.has_key?("error_handling") ? @parameters["error_handling"] : "Raise" %&gt;</parameter>
+        </parameters>
+        <api>
+            <route>/nagiosxi/api/v1/system/status</route>
+            <urlParameters>
+                <parameter name="apikey">&lt;%= @info['api_key'] %&gt;</parameter>
+            </urlParameters>
+        </api>
+    </handler>
+    <results format="xml">
+        <result name="Handler Error Message"/>
+        <result name="Nagios XI Response"/>
+    </results>
+</taskDefinition>

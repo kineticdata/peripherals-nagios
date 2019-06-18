@@ -1,0 +1,4 @@
+<results>
+  <result name="Handler Error Message" type="Regexp"></result>
+  <result name="Nagios XI Response" type="Regexp">\{"servicestatuslist":\{"recordcount":"\d+".*?\}.*?\}[\n\s]*</result>
+</results>

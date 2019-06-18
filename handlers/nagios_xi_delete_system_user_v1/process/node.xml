@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taskDefinition id="nagios_xi_delete_system_user" name="Nagios XI Delete User" schema_version="1.0" version="1">
+    <author>support@kineticdata.com</author>
+    <description>
+        This handler deletes a Nagios XI user object.
+    </description>
+    <helpurl></helpurl>
+    <visible>true</visible>
+    <deferrable>false</deferrable>
+    <parameters>
+
+      <parameter id="error_handling" label="error handling" required="true"
+        tooltip="Determine what to return if an error is encountered." menu="Error Message,Raise Error">Error Message</parameter>
+      <parameter id="return_response" label="return response" required="true"
+        tooltip="true or false. Determines if Kinetic Task returns the Nagios response output.">no</parameter>
+      <parameter id="user_id" label="user id" required="true"
+        tooltip="User id to delete" ></parameter>
+
+    </parameters>
+    <handler name="nagios_xi_delete_system_user" version="1">
+        <infos>
+            <info name="api_server">&lt;%= @info['api_server'] %&gt;</info>
+            <info name="api_key">&lt;%= @info['api_key'] %&gt;</info>
+        </infos>
+        <parameters>
+            <parameter name="return_response">&lt;%= @parameters['return_response'] %&gt;</parameter>
+            <parameter name="error_handling">&lt;%= @parameters.has_key?("error_handling") ? @parameters["error_handling"] : "Raise" %&gt;</parameter>
+            <parameter name="user_id">&lt;%= @parameters['user_id'] %&gt;</parameter>
+        </parameters>
+        <api>
+            <route>/nagiosxi/api/v1/system/user</route>
+            <urlParameters>
+                <parameter name="apikey">&lt;%= @info['api_key'] %&gt;</parameter>
+            </urlParameters>
+        </api>
+    </handler>
+    <results format="xml">
+        <result name="Handler Error Message"/>
+        <result name="Nagios XI Response"/>
+    </results>
+</taskDefinition>

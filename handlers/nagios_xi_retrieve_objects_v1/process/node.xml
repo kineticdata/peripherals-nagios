@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taskDefinition id="nagios_xi_retrieve_objects" name="Nagios XI Retrieve Objects" schema_version="1.0" version="1">
+    <author>support@kineticdata.com</author>
+    <description>
+        This handler retrieves object records from the Nagios XI system.
+    </description>
+    <helpurl></helpurl>
+    <visible>true</visible>
+    <deferrable>false</deferrable>
+    <parameters>
+
+      <parameter id="error_handling" label="error handling" required="true"
+        tooltip="Determine what to return if an error is encountered." menu="Error Message,Raise Error">Error Message</parameter>
+      <parameter id="return_type" label="return type" required="true"
+        tooltip="The format that the results should be returned in." menu="JSON,XML,YAML">JSON</parameter>
+      <parameter id="object_type" label="object type" required="true"
+        tooltip="The type of the object to retrieve." menu="host status,service status,log entries,state history,comment,downtime,contact,host,service,hostgroup,servicegroup,contactgroup,hostgroup members,servicegroup members,contactgroup members">host status</parameter>
+      <parameter id="starttime" label="start time" required="false"
+        tooltip="Epoch start time for object record creation. Default -24 hours." ></parameter>
+      <parameter id="endtime" label="end time" required="false"
+        tooltip="Epoch end time for object record creation. Defaults to now." ></parameter>
+      <parameter id="records" label="records" required="false"
+        tooltip="Amount of records and optionally starting at. 10:20 Displays the the next 10 records after the 20th record. Defaults to all." ></parameter>
+      <parameter id="orderby" label="order by" required="false"
+        tooltip="Specifies a column to sort on along with sort type. Example: name:d" ></parameter>
+      <parameter id="columns" label="columns" required="false"
+        tooltip="Simple JSON object that has columns as keys and equality expressions as values in either string or array format. See README.md or community.kineticdata.com for examples." ></parameter>
+
+    </parameters>
+    <handler name="nagios_xi_retrieve_objects" version="1">
+        <infos>
+            <info name="api_server">&lt;%= @info['api_server'] %&gt;</info>
+            <info name="api_key">&lt;%= @info['api_key'] %&gt;</info>
+            <info name="enable_debug_logging">&lt;%= @info['enable_debug_logging'] %&gt;</info>
+        </infos>
+        <parameters>
+            <parameter name="error_handling">&lt;%= @parameters.has_key?("error_handling") ? @parameters["error_handling"] : "Raise" %&gt;</parameter>
+            <parameter name="return_type">&lt;%= @parameters['return_type'] %&gt;</parameter>
+            <parameter name="object_type">&lt;%= @parameters['object_type'].gsub(/ /, '') %&gt;</parameter>
+            <parameter name="columns">&lt;%= @parameters['columns'] %&gt;</parameter>
+        </parameters>
+        <api>
+            <route>/nagiosxi/api/v1/objects</route>
+            <urlParameters>
+                <parameter name="apikey">&lt;%= @info['api_key'] %&gt;</parameter>
+                <parameter name="starttime">&lt;%= @parameters['starttime'] %&gt;</parameter>
+                <parameter name="endtime">&lt;%= @parameters['endtime'] %&gt;</parameter>
+                <parameter name="records">&lt;%= @parameters['records'] %&gt;</parameter>
+                <parameter name="orderby">&lt;%= @parameters['orderby'] %&gt;</parameter>
+            </urlParameters>
+        </api>
+    </handler>
+    <results format="xml">
+        <result name="Handler Error Message"/>
+        <result name="Nagios XI Response"/>
+    </results>
+</taskDefinition>

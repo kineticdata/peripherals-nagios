@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taskDefinition id="nagios_xi_update_system_import_config" name="Nagios XI Import Config" schema_version="1.0" version="1">
+    <author>support@kineticdata.com</author>
+    <description>
+        This handler runs the import command which imports all configuration files into the CCM. Nagios Core is *not* restarted.
+    </description>
+    <helpurl></helpurl>
+    <visible>true</visible>
+    <deferrable>false</deferrable>
+    <parameters>
+
+      <parameter id="error_handling" label="error handling" required="true"
+        tooltip="Determine what to return if an error is encountered." menu="Error Message,Raise Error">Error Message</parameter>
+      <parameter id="return_response" label="return response" required="true"
+        tooltip="true or false. Determines if Kinetic Task returns the Nagios response output.">no</parameter>
+
+    </parameters>
+    <handler name="nagios_xi_update_system_import_config" version="1">
+        <infos>
+            <info name="api_server">&lt;%= @info['api_server'] %&gt;</info>
+            <info name="api_key">&lt;%= @info['api_key'] %&gt;</info>
+        </infos>
+        <parameters>
+            <parameter name="return_response">&lt;%= @parameters['return_response'] %&gt;</parameter>
+            <parameter name="error_handling">&lt;%= @parameters.has_key?("error_handling") ? @parameters["error_handling"] : "Raise" %&gt;</parameter>
+        </parameters>
+        <api>
+            <route>/nagiosxi/api/v1/system/importconfig</route>
+            <urlParameters>
+                <parameter name="apikey">&lt;%= @info['api_key'] %&gt;</parameter>
+            </urlParameters>
+        </api>
+    </handler>
+    <results format="xml">
+        <result name="Handler Error Message"/>
+        <result name="Nagios XI Response"/>
+    </results>
+</taskDefinition>

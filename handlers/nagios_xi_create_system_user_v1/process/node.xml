@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taskDefinition id="nagios_xi_create_system_user" name="Nagios XI Create User" schema_version="1.0" version="1">
+    <author>support@kineticdata.com</author>
+    <description>
+        This handler creates a new Nagios XI user object.
+    </description>
+    <helpurl></helpurl>
+    <visible>true</visible>
+    <deferrable>false</deferrable>
+    <parameters>
+
+        <parameter id="error_handling" label="error handling" required="true"
+          tooltip="Determine what to return if an error is encountered." menu="Error Message,Raise Error">Error Message</parameter>
+        <parameter id="return_response" label="return response" required="true"
+          tooltip="true or false. Determines if Kinetic Task returns the Nagios response output.">yes</parameter>
+
+        <parameter id="username" label="username" required="true"
+          tooltip="New user username." ></parameter>
+        <parameter id="password" label="password" required="true"
+          tooltip="Password for the new user." ></parameter>
+        <parameter id="name" label="name" required="true"
+          tooltip="Name of the new user." ></parameter>
+        <parameter id="email" label="email" required="true"
+          tooltip="Email address of the new user." ></parameter>
+        <parameter id="force_pw_change" label="force password change" required="false"
+          tooltip="Determines if user must change password on first login. Default is 1 (yes)" ></parameter>
+        <parameter id="email_info" label="email info" required="false"
+          tooltip="Send e-mail to user with their new account information. Default is 1 (yes)" ></parameter>
+        <parameter id="monitoring_contact" label="monitoring contact" required="false"
+          tooltip="Determines if a monitoring contact is made for this user. Default is 1 (yes)" ></parameter>
+        <parameter id="enable_notifications" label="enable notifications" required="false"
+          tooltip="Determines if the user will get notifications. Default is 1 (yes)" ></parameter>
+        <parameter id="language" label="language" required="false"
+          tooltip="Sets the users preferred language. Default is xi default." ></parameter>
+        <parameter id="date_format" label="date format" required="false"
+          tooltip="Sets the users preferred date format. Default is 1 (YYYY-MM-DD)" ></parameter>
+        <parameter id="number_format" label="number format" required="false"
+          tooltip="Sets the users preferred number format. Default is 1 (1000.00)" ></parameter>
+        <parameter id="auth_level" label="authorization level" required="false"
+          tooltip="Sets the users authorization level. Default is user. Other option is admin." ></parameter>
+        <parameter id="can_see_all_hs" label="can see all objects" required="false"
+          tooltip="Allows a user to view all objects that are configured no matter what what contact group they are in or what objects they are contacts of. Default value is 0 (no)." ></parameter>
+        <parameter id="can_control_all_hs" label="can control all hosts and services" required="false"
+          tooltip="Allows a user to configure - acknowledge problems, schedule downtime, toggle notifications and force checks on all objects. Default value is 0 (no)." ></parameter>
+        <parameter id="can_reconfigure_hs" label="can reconfigure all hosts and services" required="false"
+          tooltip="Allows a user to be able to re-configure a host/service from the status screen under by using the re-configure option to set contacts, update check intervals, amount of checks for hard state, etc. Default value is 0 (no)." ></parameter>
+        <parameter id="can_control_engine" label="can control engine" required="false"
+          tooltip="Allows a user to restart the Nagios Core engine. Default value is 0 (no)." ></parameter>
+        <parameter id="can_use_advanced" label="can use advanced features" required="false"
+          tooltip="Allows the user to see the CCM links. Shows the check_command in the re-configure host/service page. Shows advanced tab with advanced commands in the host/service detail pages. Allows setting parents during wizards and re-configuration. Default value is 0 (no)." ></parameter>
+        <parameter id="read_only" label="read only" required="false"
+          tooltip="Set if the user only has read access. Default value is 0 (no)." ></parameter>
+
+    </parameters>
+    <handler name="nagios_xi_create_system_user" version="1">
+        <infos>
+            <info name="api_server">&lt;%= @info['api_server'] %&gt;</info>
+            <info name="api_key">&lt;%= @info['api_key'] %&gt;</info>
+        </infos>
+        <parameters>
+            <parameter name="return_response">&lt;%= @parameters['return_response'] %&gt;</parameter>
+            <parameter name="error_handling">&lt;%= @parameters["error_handling"] %&gt;</parameter>
+        </parameters>
+        <api>
+            <route>/nagiosxi/api/v1/system/user</route>
+            <urlParameters>
+                <parameter name="apikey">&lt;%= @info['api_key'] %&gt;</parameter>
+                <parameter name="username">&lt;%= @parameters['username'] %&gt;</parameter>
+                <parameter name="password">&lt;%= @parameters['password'] %&gt;</parameter>
+                <parameter name="name">&lt;%= @parameters['name'] %&gt;</parameter>
+                <parameter name="email">&lt;%= @parameters['email'] %&gt;</parameter>
+                <parameter name="force_pw_change">&lt;%= @parameters['force_pw_change'] %&gt;</parameter>
+                <parameter name="email_info">&lt;%= @parameters['email_info'] %&gt;</parameter>
+                <parameter name="monitoring_contact">&lt;%= @parameters['monitoring_contact'] %&gt;</parameter>
+                <parameter name="enable_notifications">&lt;%= @parameters['enable_notifications'] %&gt;</parameter>
+                <parameter name="language">&lt;%= @parameters['language'] %&gt;</parameter>
+                <parameter name="date_format">&lt;%= @parameters['date_format'] %&gt;</parameter>
+                <parameter name="number_format">&lt;%= @parameters['number_format'] %&gt;</parameter>
+                <parameter name="auth_level">&lt;%= @parameters['auth_level'] %&gt;</parameter>
+                <parameter name="can_see_all_hs">&lt;%= @parameters['can_see_all_hs'] %&gt;</parameter>
+                <parameter name="can_control_all_hs">&lt;%= @parameters['can_control_all_hs'] %&gt;</parameter>
+                <parameter name="can_reconfigure_hs">&lt;%= @parameters['can_reconfigure_hs'] %&gt;</parameter>
+                <parameter name="can_control_engine">&lt;%= @parameters['can_control_engine'] %&gt;</parameter>
+                <parameter name="can_use_advanced">&lt;%= @parameters['can_use_advanced'] %&gt;</parameter>
+                <parameter name="read_only">&lt;%= @parameters['read_only'] %&gt;</parameter>
+            </urlParameters>
+        </api>
+    </handler>
+    <results format="xml">
+        <result name="Handler Error Message"/>
+        <result name="Nagios XI Response"/>
+    </results>
+</taskDefinition>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taskDefinition id="nagios_xi_retrieve_system_users" name="Nagios XI Retrieve Users" schema_version="1.0" version="1">
+    <author>support@kineticdata.com</author>
+    <description>
+        This handler retrieves user records from the Nagios XI system.
+    </description>
+    <helpurl></helpurl>
+    <visible>true</visible>
+    <deferrable>false</deferrable>
+    <parameters>
+
+      <parameter id="error_handling" label="error handling" required="true"
+        tooltip="Determine what to return if an error is encountered." menu="Error Message,Raise Error">Error Message</parameter>
+      <parameter id="return_type" label="return type" required="true"
+        tooltip="The format that the results should be returned in." menu="JSON,XML,YAML">JSON</parameter>
+      <parameter id="user_id" label="user id" required="false"
+        tooltip="Supply a user id to retrieve back only one user record. If not set, all users are returned." ></parameter>
+
+    </parameters>
+    <handler name="nagios_xi_retrieve_system_users" version="1">
+        <infos>
+            <info name="api_server">&lt;%= @info['api_server'] %&gt;</info>
+            <info name="api_key">&lt;%= @info['api_key'] %&gt;</info>
+            <info name="enable_debug_logging">&lt;%= @info['enable_debug_logging'] %&gt;</info>
+        </infos>
+        <parameters>
+            <parameter name="error_handling">&lt;%= @parameters.has_key?("error_handling") ? @parameters["error_handling"] : "Raise" %&gt;</parameter>
+            <parameter name="return_type">&lt;%= @parameters['return_type'] %&gt;</parameter>
+            <parameter name="user_id">&lt;%= @parameters['user_id'] %&gt;</parameter>
+        </parameters>
+        <api>
+            <route>/nagiosxi/api/v1/system/user</route>
+            <urlParameters>
+                <parameter name="apikey">&lt;%= @info['api_key'] %&gt;</parameter>
+            </urlParameters>
+        </api>
+    </handler>
+    <results format="xml">
+        <result name="Handler Error Message"/>
+        <result name="Nagios XI Response"/>
+    </results>
+</taskDefinition>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taskDefinition id="nagios_xi_create_config_host" name="Nagios XI Create Host" schema_version="1.0" version="1">
+    <author>support@kineticdata.com</author>
+    <description>
+        This handler creates a new Nagios XI host object.
+    </description>
+    <helpurl></helpurl>
+    <visible>true</visible>
+    <deferrable>false</deferrable>
+    <parameters>
+
+        <parameter id="error_handling" label="error handling" required="true"
+          tooltip="Determine what to return if an error is encountered." menu="Error Message,Raise Error">Error Message</parameter>
+        <parameter id="return_response" label="return response" required="true"
+          tooltip="true or false. Determines if Kinetic Task returns the Nagios response output.">yes</parameter>
+        <parameter id="host_name" label="host name" required="true"
+          tooltip="Host name to apply to the new host." ></parameter>
+        <parameter id="address" label="ip address" required="true"
+          tooltip="IP address of the new host." ></parameter>
+        <parameter id="max_check_attempts" label="max check attempts" required="true"
+          tooltip="Max number of attempts to try adding the host." ></parameter>
+        <parameter id="check_period" label="check period" required="true"
+          tooltip="Time period name for when checks take place for this host." ></parameter>
+        <parameter id="contacts" label="contacts" required="false"
+          tooltip="Nagios usernames to notify for alerts with this host. Comma seperated. Use this parameter *or* the contact groups parameter." ></parameter>
+        <parameter id="contact_groups" label="contact groups" required="false"
+          tooltip="Nagios group names to notify for alerts with this host. Comma seperated. Use this parameter *or* the contacts parameter." ></parameter>
+        <parameter id="notification_interval" label="notification interval" required="true"
+          tooltip="Interval check period in minutes for alert notifications on this host." ></parameter>
+        <parameter id="notification_period" label="notification period" required="true"
+          tooltip="Notification time period name. Determines the time period that notifications take place in." ></parameter>
+        <parameter id="applyconfig" label="apply config" required="true"
+          tooltip="1 or 0 for true or false. 1 will restart the Nagios Core service and apply the change." >0</parameter>
+
+    </parameters>
+    <handler name="nagios_xi_create_config_host" version="1">
+        <infos>
+            <info name="api_server">&lt;%= @info['api_server'] %&gt;</info>
+            <info name="api_key">&lt;%= @info['api_key'] %&gt;</info>
+        </infos>
+        <parameters>
+            <parameter name="return_response">&lt;%= @parameters['return_response'] %&gt;</parameter>
+            <parameter name="error_handling">&lt;%= @parameters["error_handling"] %&gt;</parameter>
+        </parameters>
+        <api>
+            <route>/nagiosxi/api/v1/config/host</route>
+            <urlParameters>
+                <parameter name="apikey">&lt;%= @info['api_key'] %&gt;</parameter>
+                <parameter name="host_name">&lt;%= @parameters['host_name'] %&gt;</parameter>
+                <parameter name="address">&lt;%= @parameters['address'] %&gt;</parameter>
+                <parameter name="max_check_attempts">&lt;%= @parameters['max_check_attempts'] %&gt;</parameter>
+                <parameter name="check_period">&lt;%= @parameters['check_period'] %&gt;</parameter>
+                <parameter name="contacts">&lt;%= @parameters['contacts'] %&gt;</parameter>
+                <parameter name="contact_groups">&lt;%= @parameters['contact_groups'] %&gt;</parameter>
+                <parameter name="notification_interval">&lt;%= @parameters['notification_interval'] %&gt;</parameter>
+                <parameter name="notification_period">&lt;%= @parameters['notification_period'] %&gt;</parameter>
+                <parameter name="applyconfig">&lt;%= @parameters['applyconfig'] %&gt;</parameter>
+            </urlParameters>
+        </api>
+    </handler>
+    <results format="xml">
+        <result name="Handler Error Message"/>
+        <result name="Nagios response"/>
+    </results>
+</taskDefinition>
