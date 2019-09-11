@@ -3,3 +3,6 @@ repo-name: peripherals-nagios
 categories:
 - DevOps
 display-name: Nagios
+description: Nagios is a free and open source computer-software application that monitors systems, networks and infrastructure.
+manufacturer: Nagios
+product: Nagios
